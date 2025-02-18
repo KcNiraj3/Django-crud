@@ -1,4 +1,4 @@
-from models import Student
+from .models import Student
 from django import forms
 
 class StudentForms(forms.ModelForm):
