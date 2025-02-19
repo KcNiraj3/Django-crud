@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Student
+from .models import Student, ExcelFile
 from .forms import StudentForms
+import pandas as pd
+from django.http import JsonResponse
+from django.conf import settings
 
 # Create your views here.
 
@@ -30,3 +33,37 @@ def home(request, id=None): # default arguments
     }
     
     return render(request, "home.html", context = context)
+
+def export_data_to_excel(request):
+    objs = Student.objects.all()
+    
+    data= []
+    for obj in objs:
+        data.append({"name" : obj.name, 
+                  "age"  : obj.age})
+        pd.DataFrame(data).to_excel('students.xlsx')
+        
+    return JsonResponse({
+        "status": 200,
+    })
+    
+def import_data_to_excel(request):
+    if request.method == 'POST':
+        file = request.FILES['files']
+        obj = ExcelFile.objects.create(
+            file = file
+        )
+        path = str(obj.file)
+        print(f'{settings.BASE_DIR}/{path}')
+        df = pd.read_excel(path)
+        #print(df)
+        for index, row in df.iterrows():
+            Student.objects.create(
+            name = row['name'],
+            age = row['age']
+            ) 
+        return JsonResponse({
+        "status": 200,
+    })     
+    
+    return render(request, 'excel.html')  

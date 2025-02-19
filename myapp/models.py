@@ -7,3 +7,6 @@ class Student(models.Model):
     age = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+class ExcelFile(models.Model):
+    file = models.FileField(upload_to='excel')    

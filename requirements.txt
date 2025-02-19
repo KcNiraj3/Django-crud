@@ -1,1 +1,3 @@
 django
+pandas
+openpyxl # is required when using to_excel() 
