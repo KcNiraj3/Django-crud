@@ -6,6 +6,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name="home"),
     path('update/<int:id>', views.home, name="update_student"),
-    path('export_data_to_excel/', views.export_data_to_excel, name="export_data_to_excel"),
-    path('import_data_to_excel/', views.import_data_to_excel, name="import_data_to_excel"),
+    # path('export_data_to_excel/', views.export_data_to_excel, name="export_data_to_excel"),
+    # path('import_data_to_excel/', views.import_data_to_excel, name="import_data_to_excel"),
+    path('export_data/', views.export_data, name="export_data"),
+    path('import_data/', views.import_data, name="import_data"),
 ]

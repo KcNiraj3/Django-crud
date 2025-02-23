@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title_block %}
+    Student Management
+{% endblock %}
+
+{% block child_block %}
+<div class="container my-5">
+    <h2 class="text-center">Student Management</h2>
+
+    <!-- Form for creating or updating a student -->
+    <div class="card mt-3">
+        <div class="card-body">
+            <a href="{% url 'export_data' %}" class="btn btn-success">Export Data</a>
+            <a href="{% url 'import_data' %}" class="btn btn-success">Import Data</a>
+            <h5 class="card-title text-center">
+                {% if student.id %}
+                    Update Student
+                {% else %}
+                    Create New Student
+                {% endif %}
+            </h5>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="name" name="name"
+                               placeholder="Enter student name" value="{{ form.name.value|default:'' }}">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="age">Age</label>
+                        <input type="text" class="form-control" id="age" name="age"
+                               value="{{ form.age.value }}">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Students List -->
+    <div class="card mt-3">
+        <div class="card-header">
+            <h1>Students List</h1>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.age }}</td>
+                        <td><a href="{% url 'update_student' student.id %}" class="btn btn-warning btn-sm">Edit</a></td>
+                        <td><button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal({{ student.id }})">Delete</button></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap Modal for Delete Confirmation -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this student?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="POST" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="delete" id="studentIdToDelete">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showDeleteModal(studentId) {
+        document.getElementById('studentIdToDelete').value = studentId;
+        $('#deleteModal').modal('show');
+    }
+</script>
+
+{% endblock %}

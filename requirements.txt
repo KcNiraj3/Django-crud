@@ -1,3 +1,5 @@
 django
 pandas
 openpyxl # is required when using to_excel() 
+django-import-export
+tablib #tablib library in Python is used for handling tabular data in multiple formats such as CSV, JSON, Exce
